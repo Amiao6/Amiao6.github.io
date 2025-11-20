@@ -42,13 +42,26 @@
                 display: block;
             }
         }
+        
+        /* 时间显示样式 */
+        #current-time {
+            font-family: 'Courier New', monospace;
+            background-color: #f3f4f6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800">
     <!-- 导航栏 -->
     <nav id="navbar" class="fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-primary">MyWebsite</a>
+            <div class="flex items-center gap-6">
+                <a href="#" class="text-2xl font-bold text-primary">MyWebsite</a>
+                <!-- 添加的当前时间显示 -->
+                <div id="current-time" class="text-gray-600 hidden md:block"></div>
+            </div>
             
             <!-- 桌面导航 -->
             <div class="hidden md:flex space-x-8">
@@ -675,8 +688,34 @@
         document.getElementById('carousel').addEventListener('mouseenter', stopSlideInterval);
         document.getElementById('carousel').addEventListener('mouseleave', startSlideInterval);
         
+        // 显示当前时间功能
+        function updateCurrentTime() {
+            const now = new Date();
+            
+            // 获取日期和时间组件
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // 格式化时间字符串
+            const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            
+            // 更新DOM元素
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+
         // 初始化
-        document.addEventListener('DOMContentLoaded', initCarousel);
+        document.addEventListener('DOMContentLoaded', () => {
+            initCarousel();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+        });
     </script>
 </body>
 </html>
